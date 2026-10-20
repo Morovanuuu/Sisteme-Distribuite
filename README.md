@@ -1,7 +1,4 @@
-# Sistem de Fișiere Distribuit (Echivalent HDFS)
-
-## Autor
-* Numele Tău (Grupa) - *Singur pe proiect*
+# Sistem de Fișiere Distribuit 
 
 ## Compilare
 Proiectul folosește structura standard. Pentru a compila clasele în folderul `target/classes`:
