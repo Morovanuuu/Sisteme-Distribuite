@@ -5,9 +5,7 @@ Proiectul folosește structura standard. Pentru a compila clasele în folderul `
 ```bash
 # Calea manuală:
 mkdir -p target/classes
-javac -d target/classes src/ro/ubm/sd/node/StorageNode.java src/ro/ubm/sd/client/Client.java
-# Sau dacă folosești Maven:
-mvn -q package
+javac -d target/classes src/ro/ubm/sd/common/*.java src/ro/ubm/sd/node/*.java src/ro/ubm/sd/client/*.java
 ```
 
 ## Pornire Procese
@@ -25,5 +23,15 @@ java -cp target/classes ro.ubm.sd.node.StorageNode --id n3 --port 7003 --dir dat
 
 **3. Pornirea Clientului**
 ```bash
-java -cp target/classes ro.ubm.sd.client.Client --coordinator localhost:7001
+java -cp target/classes ro.ubm.sd.client.Client
+```
+
+Comenzi în client: `nodes`, `put <nod> <fișier>`, `get <nod> <nume> <destinație>`, `exit`. Numele fișierelor nu pot conține spații.
+
+Grupul multicast este `239.255.0.k`, port 4446, unde `k` e numărul echipei (constanta `GROUP` din `Protocol.java`).
+
+## Verificare protocol
+```bash
+javac -d target/classes src/ro/ubm/sd/common/*.java test/ro/ubm/sd/common/*.java
+java -cp target/classes ro.ubm.sd.common.ProtocolCheck
 ```
