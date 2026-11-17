@@ -75,9 +75,11 @@ public class StorageNode {
     private void run(int port, String dirName, String rol) throws IOException {
         try (ServerSocket server = new ServerSocket(port)) {
             log(String.format("pornit: port TCP %d, director %s, rol: %s", port, dirName, rol));
-            discovery = new Discovery(id, m -> log("nod descoperit: " + m + " (cunosc acum " + discovery.members().size() + ")"));
+            discovery = new Discovery(id, m -> log(String.format("nod %s: %s (ultimul HELLO acum %d ms)",
+                    m, m.state(), System.currentTimeMillis() - m.lastSeen())));
             discovery.startListening();
             discovery.startAnnouncing(port);
+            discovery.startMonitoring();
             while (true) {
                 Socket socket = server.accept();
                 pool.submit(() -> handle(socket));
