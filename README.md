@@ -5,7 +5,7 @@ Proiectul folosește structura standard. Pentru a compila clasele în folderul `
 ```bash
 # Calea manuală:
 mkdir -p target/classes
-javac -d target/classes src/ro/ubm/sd/common/*.java src/ro/ubm/sd/node/*.java src/ro/ubm/sd/client/*.java
+javac --release 17 -d target/classes src/ro/ubm/sd/common/*.java src/ro/ubm/sd/node/*.java src/ro/ubm/sd/client/*.java
 ```
 
 ## Pornire Procese
@@ -30,8 +30,18 @@ Comenzi în client: `nodes`, `put <nod> <fișier>`, `get <nod> <nume> <destinaț
 
 Grupul multicast este `239.255.0.k`, port 4446, unde `k` e numărul echipei (constanta `GROUP` din `Protocol.java`).
 
-## Verificare protocol
+## Detectarea defectelor (Etapa 3)
+`HELLO`-ul trimis la 2 s este și semnul de viață. Fiecare nod verifică la 500 ms de când nu a mai auzit de ceilalți:
+fără `HELLO` de peste 3 s → `SUSPECT`, de peste 4 s → `CAZUT`, un `HELLO` nou → `ACTIV`. Un nod oprit forțat
+este marcat `CAZUT` în max ~4,5 s. Fiecare schimbare de stare apare în log cu oră exactă:
+```
+10:43:55.890 [n1] nod n3@192.168.1.10:7003: CAZUT (ultimul HELLO acum 4485 ms)
+```
+Test: oprește un nod cu `Ctrl+C` (sau `taskkill /F /PID <pid>` / `kill -9 <pid>`) și urmărește logurile celorlalte.
+
+## Verificare
 ```bash
-javac -d target/classes src/ro/ubm/sd/common/*.java test/ro/ubm/sd/common/*.java
+javac --release 17 -d target/classes src/ro/ubm/sd/common/*.java test/ro/ubm/sd/common/*.java
 java -cp target/classes ro.ubm.sd.common.ProtocolCheck
+java -cp target/classes ro.ubm.sd.common.DiscoveryCheck
 ```
